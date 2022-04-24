@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="wdevs" translate="label" sortOrder="10">
+			<label>Wdevs</label>
+		</tab>
+		<section id="topbar" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+			<label>Top Bar</label>
+			<tab>wdevs</tab>
+			<resource>Wdevs_CustomBar::config_wdevs_custombar</resource>
+			<group id="general" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+				<label>General</label>
+				<field id="enabled" type="select" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+					<label>Enable</label>
+					<comment>Enable or disable top bar</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>
