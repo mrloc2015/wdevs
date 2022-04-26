@@ -2,7 +2,10 @@
 /**
  * @var $block \Wdevs\CustomBar\Block\TopBar
  */
+$content = $block->displayCustomBar();
 ?>
-<div>
-    <?= $block->displayCustomBar() ?>
-</div>
+<?php if ($content): ?>
+    <div>
+        <?= $content ?>
+    </div>
+<?php endif; ?>

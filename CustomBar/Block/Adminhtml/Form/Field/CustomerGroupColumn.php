@@ -7,7 +7,7 @@ use Wdevs\CustomBar\Model\Customer\Source\Group as CustomerSource;
 
 class CustomerGroupColumn extends AbstractColumn
 {
-
+    protected $width = 200;
     /**
      * @var CustomerSource
      */

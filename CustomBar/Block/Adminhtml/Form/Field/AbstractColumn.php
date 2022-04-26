@@ -6,6 +6,9 @@ use Magento\Framework\View\Element\Html\Select;
 
 abstract class AbstractColumn extends Select
 {
+
+    protected $width = 0;
+
     /**
      * Set "name" for <select> element
      *
@@ -39,6 +42,9 @@ abstract class AbstractColumn extends Select
     {
         if (!$this->getOptions()) {
             $this->setOptions($this->getSourceOptions());
+        }
+        if ($this->width) {
+            $this->setExtraParams('style="width:' . $this->width . 'px;"');
         }
 
         return parent::_toHtml();
