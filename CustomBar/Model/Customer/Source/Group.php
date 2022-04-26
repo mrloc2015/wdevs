@@ -10,8 +10,6 @@ use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
 
 /**
  * Class Group
- *
- * @package Razzzila\StaticBlockACL\Model\Customer\Source
  */
 class Group implements GroupSourceInterface
 {
@@ -55,21 +53,6 @@ class Group implements GroupSourceInterface
                 'label' => $group->getCode(),
                 'value' => $group->getId(),
             ];
-        }
-
-        return $customerGroups;
-    }
-
-    public function toArrayByKey()
-    {
-        $customerGroups = [];
-
-        /** @var GroupSearchResultsInterface $groups */
-        $groups = $this->groupRepository->getList(
-            $this->searchCriteriaBuilder->create()
-        );
-        foreach ($groups->getItems() as $group) {
-            $customerGroups[$group->getId()] = $group->getCode();
         }
 
         return $customerGroups;

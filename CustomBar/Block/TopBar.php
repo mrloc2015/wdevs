@@ -7,16 +7,16 @@ declare(strict_types=1);
 
 namespace Wdevs\CustomBar\Block;
 
-use Magento\Framework\App\Http\Context as HttpContext;
 use Magento\Customer\Model\Context as CustomerContext;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Http\Context as HttpContext;
+use Magento\Framework\View\Element\Template\Context;
+use Wdevs\CustomBar\Model\Customer\Source\Group as CustomerSource;
+use Magento\Store\Model\ScopeInterface;
 
 class TopBar extends \Magento\Framework\View\Element\Template
 {
-
-    /**
-     * @var \Wdevs\CustomBar\Helper\Data
-     */
-    protected $helper;
+    const XPATH_IS_ENABLED = 'topbar/general/enabled';
 
     /**
      * @var HttpContext
@@ -24,27 +24,32 @@ class TopBar extends \Magento\Framework\View\Element\Template
     protected $httpContext;
 
     /**
-     * @var \Wdevs\CustomBar\Model\Customer\Source\Group
+     * @var CustomerSource
      */
     protected $groupModel;
 
     /**
-     * Constructor
-     *
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Wdevs\CustomBar\Helper\Data                     $helper
-     * @param array                                            $data
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @param Context              $context
+     * @param HttpContext          $httpContext
+     * @param CustomerSource       $groupModel
+     * @param ScopeConfigInterface $scopeConfig
+     * @param array                $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Wdevs\CustomBar\Helper\Data                     $helper,
-        HttpContext                                      $httpContext,
-        \Wdevs\CustomBar\Model\Customer\Source\Group     $groupModel,
-        array                                            $data = []
+        Context              $context,
+        HttpContext          $httpContext,
+        CustomerSource       $groupModel,
+        ScopeConfigInterface $scopeConfig,
+        array                $data = []
     ) {
+        $this->scopeConfig = $scopeConfig;
         $this->groupModel  = $groupModel;
         $this->httpContext = $httpContext;
-        $this->helper      = $helper;
         parent::__construct($context, $data);
     }
 
@@ -53,15 +58,15 @@ class TopBar extends \Magento\Framework\View\Element\Template
      */
     public function displayCustomBar()
     {
-        return __('Hello, your customer group is: %1', $this->getText());
+        return __('Hello, your customer group is: %1');
     }
 
-    protected function getText()
+    protected function isEnabled()
     {
-        $groups = $this->groupModel->toArrayByKey();
-        if ($groups && isset($groups[$this->getCurrentCustomerGroup()])) {
-            return $groups[$this->getCurrentCustomerGroup()];
-        }
+        return $this->scopeConfig->getValue(
+            static::XPATH_IS_ENABLED,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -69,11 +74,11 @@ class TopBar extends \Magento\Framework\View\Element\Template
      */
     protected function _toHtml()
     {
-        return ($this->helper->isEnabled() && $this->isRenderingAllowed() !== false) ? parent::_toHtml() : '';
+        return ($this->isEnabled() && $this->isRenderingAllowed() !== false) ? parent::_toHtml() : '';
     }
 
     /**
-     * @return bool
+     * @return string|null
      */
     protected function isRenderingAllowed()
     {
@@ -81,7 +86,7 @@ class TopBar extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * @return mixed|null
+     * @return string|null
      */
     protected function getCurrentCustomerGroup()
     {
@@ -89,6 +94,4 @@ class TopBar extends \Magento\Framework\View\Element\Template
             CustomerContext::CONTEXT_GROUP
         );
     }
-
 }
-
